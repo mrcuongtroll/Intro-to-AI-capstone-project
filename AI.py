@@ -34,11 +34,11 @@ for i in range(m+1):              #Initiate the map with nodes
         TheMap[i,j] = node((i,j))
         if i == 0:
             TheMap[i,j].available_dir.remove('n')
-        if i == m-1:
+        if i == m:
             TheMap[i,j].available_dir.remove('s')
         if j == 0:
             TheMap[i,j].available_dir.remove('w')
-        if j == n-1:
+        if j == n:
             TheMap[i,j].available_dir.remove('e')
 current = [0,0]                 #We start at the origin
 current_tax = 0                 #Initial tax = 0
@@ -55,7 +55,7 @@ def GoEast():
         TheMap[current[0], current[1]].available_dir.remove('e')
         # sequence.append('e')
         current_tax += cost['e']
-        current[0] += 1
+        current[1] += 1
         if 'w' in TheMap[current[0], current[1]].available_dir:
             TheMap[current[0], current[1]].available_dir.remove('w')
     return
@@ -72,7 +72,7 @@ def GoWest():
         TheMap[current[0], current[1]].available_dir.remove('w')
         # sequence.append('w')
         current_tax -= cost['w']
-        current[0] -= 1
+        current[1] -= 1
         if 'e' in TheMap[current[0], current[1]].available_dir:
             TheMap[current[0], current[1]].available_dir.remove('e')
     return
@@ -89,7 +89,7 @@ def GoSouth():
         TheMap[current[0], current[1]].available_dir.remove('s')
         # sequence.append('s')
         current_tax *= cost['s']
-        current[1] += 1
+        current[0] += 1
         if 'n' in TheMap[current[0], current[1]].available_dir:
             TheMap[current[0], current[1]].available_dir.remove('n')
     return
@@ -106,7 +106,7 @@ def GoNorth():
         TheMap[current[0], current[1]].available_dir.remove('n')
         # sequence.append('n')
         current_tax /= cost['n']
-        current[1] -= 1
+        current[0] -= 1
         if 's' in TheMap[current[0], current[1]].available_dir:
             TheMap[current[0], current[1]].available_dir.remove('s')
     return
