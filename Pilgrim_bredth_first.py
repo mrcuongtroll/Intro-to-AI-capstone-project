@@ -1,5 +1,6 @@
 import random
 from collections import deque
+import timeit
 
 """
 East: e (increase cost by cost['e'])
@@ -33,7 +34,6 @@ def ExpandEast(dequeue = True, gothere = False):
         print('You cannot go east from here')
         return
     else:
-        current.available_dir.remove('e')
         tax = current.tax + cost['e']
         to_coordinates = (current.coordinates[0], current.coordinates[1] + 1)
         path = current.path + ({current.coordinates, to_coordinates},)
@@ -42,8 +42,6 @@ def ExpandEast(dequeue = True, gothere = False):
         else:
             action_sequence = ()
         toNode = node(coordinates = to_coordinates, path = path, tax = tax, action_sequence= action_sequence)
-        if 'w' in toNode.available_dir:
-            toNode.available_dir.remove('w')
         if dequeue:
             thequeue.append(toNode)
         if gothere:
@@ -56,7 +54,6 @@ def ExpandWest(dequeue = True, gothere = False):
         print('You cannot go West from here')
         return
     else:
-        current.available_dir.remove('w')
         tax = current.tax - cost['w']
         to_coordinates = (current.coordinates[0], current.coordinates[1] - 1)
         path = current.path + ({current.coordinates, to_coordinates},)
@@ -65,8 +62,6 @@ def ExpandWest(dequeue = True, gothere = False):
         else:
             action_sequence = ()
         toNode = node(coordinates = to_coordinates, path = path, tax = tax, action_sequence= action_sequence)
-        if 'e' in toNode.available_dir:
-            toNode.available_dir.remove('e')
         if dequeue:
             thequeue.append(toNode)
         if gothere:
@@ -79,7 +74,6 @@ def ExpandSouth(dequeue = True, gothere = False):
         print('You cannot go South from here')
         return
     else:
-        current.available_dir.remove('s')
         tax = current.tax * cost['s']
         to_coordinates = (current.coordinates[0] + 1, current.coordinates[1])
         path = current.path + ({current.coordinates, to_coordinates},)
@@ -88,8 +82,6 @@ def ExpandSouth(dequeue = True, gothere = False):
         else:
             action_sequence = ()
         toNode = node(coordinates = to_coordinates, path = path, tax = tax, action_sequence= action_sequence)
-        if 'n' in toNode.available_dir:
-            toNode.available_dir.remove('n')
         if dequeue:
             thequeue.append(toNode)
         if gothere:
@@ -102,7 +94,6 @@ def ExpandNorth(dequeue = True, gothere = False):
         print('You cannot go North from here')
         return
     else:
-        current.available_dir.remove('n')
         tax = current.tax / cost['n']
         to_coordinates = (current.coordinates[0] - 1, current.coordinates[1])
         path = current.path + ({current.coordinates, to_coordinates},)
@@ -111,8 +102,6 @@ def ExpandNorth(dequeue = True, gothere = False):
         else:
             action_sequence = ()
         toNode = node(coordinates = to_coordinates, path = path, tax = tax, action_sequence= action_sequence)
-        if 's' in toNode.available_dir:
-            toNode.available_dir.remove('s')
         if dequeue:
             thequeue.append(toNode)
         if gothere:
@@ -120,14 +109,14 @@ def ExpandNorth(dequeue = True, gothere = False):
     return
 
 def ExpandNode(node: node):
-    while node.available_dir:
-        if node.available_dir[0] == 'e':
+    for dir in node.available_dir:
+        if dir == 'e':
             ExpandEast()
-        elif node.available_dir[0] == 'w':
+        elif dir == 'w':
             ExpandWest()
-        elif node.available_dir[0] == 's':
+        elif dir == 's':
             ExpandSouth()
-        elif node.available_dir[0] == 'n':
+        elif dir == 'n':
             ExpandNorth()
     return
 
@@ -147,10 +136,13 @@ def PilgrimBredthFirst():
         current = thequeue.popleft()
         if GoalTest():
             Solution()
+            del current
         elif not current.available_dir:
+            del current
             continue
         else:
             ExpandNode(current)
+            del current
     print("The optimal action sequence is:", best_action_sequence)
     print("which corresponds to the minimal tax:", best_tax)
     return
@@ -165,7 +157,6 @@ if __name__ == '__main__':
     cost['e'] = random.randint(2, 4)
     cost['s'] = random.randint(2, 4)
     cost['n'] = random.randint(2, 4)
-    oposite = {'w': 'e', 'e': 'w', 'n': 's', 's': 'n'}
     print("Going East will increase the tax by", cost['e'])
     print('Going West will decrease the tax by', cost['w'])
     print('Going South will multiply the tax by', cost['s'])
@@ -179,9 +170,11 @@ if __name__ == '__main__':
             ExpandEast(dequeue=False, gothere=True)
         elif dir == 's':
             ExpandSouth(dequeue=False, gothere=True)
-        else:
+        elif dir == 'n':
             ExpandNorth(dequeue=False, gothere=True)
     thequeue.append(current)
     best_tax = 10e9
     best_action_sequence = ()
+    t0 = timeit.default_timer()
     PilgrimBredthFirst()
+    print("Time taken to solve this problem:", timeit.default_timer() - t0)
