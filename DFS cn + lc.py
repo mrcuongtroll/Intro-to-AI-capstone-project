@@ -119,27 +119,6 @@ def Solution(current_path, current_cost):
         print(best_path)
         print('\n')
 
-
-def BoundingObsolete(current_cost, current_path):
-    global all_points, min_cost, best_path
-    if (current_cost + 1000 - max(move_cost[2], move_cost[3]) * (n - current_path[-1].get_position()[1])) / (
-            max(move_cost[0], move_cost[1]) ** (m - current_path[-1].get_position()[1])) < min_cost + 1000:
-        return True
-    else:
-        return False
-
-
-def Bounding(current_cost, current_path):
-    global all_points, min_cost, best_path
-    if math.exp(current_cost / 10000) / (
-            max(move_cost[0], move_cost[1]) ** (
-            (m - current_path[-1].get_position()[0]) * (n - current_path[-1].get_position()[1]))) < math.exp(
-            min_cost / 10000):
-        return True
-    else:
-        return False
-
-
 def DFS():
     global stack_path, min_cost, move_cost, all_points, stack_cost, count, best_path
     if len(stack_path) == 0:
@@ -160,11 +139,10 @@ def DFS():
                     close_node(current_node, new_coordinate)
                     if current_path[-1].get_position() == (m - 1, n - 1):
                         Solution(current_path, current_cost)
-                    elif current_path[-1].possible_move != [0, 0, 0, 0] and Bounding(current_cost,current_path):
-                        if loop_check(new_node,current_path,current_cost):
-                            stack_path.append(current_path)
-                            stack_cost.append(current_cost)
-                            DFS()
+                    elif current_path[-1].possible_move != [0, 0, 0, 0] and loop_check(new_node,current_path,current_cost):
+                        stack_path.append(current_path)
+                        stack_cost.append(current_cost)
+                        DFS()
                     current_path.pop()
                     current_cost *= move_cost[0]
                     to_unclose_node = closed_nodes.pop()
@@ -182,11 +160,10 @@ def DFS():
                     close_node(current_node, new_coordinate)
                     if current_path[-1].get_position() == (m - 1, n - 1):
                         Solution(current_path, current_cost)
-                    elif current_path[-1].possible_move != [0, 0, 0, 0] and Bounding(current_cost,current_path):
-                        if loop_check(new_node,current_path,current_cost):
-                            stack_path.append(current_path)
-                            stack_cost.append(current_cost)
-                            DFS()
+                    elif current_path[-1].possible_move != [0, 0, 0, 0] and loop_check(new_node,current_path,current_cost):
+                        stack_path.append(current_path)
+                        stack_cost.append(current_cost)
+                        DFS()
                     current_path.pop()
                     current_cost /= move_cost[1]
                     to_unclose_node = closed_nodes.pop()
@@ -204,11 +181,10 @@ def DFS():
                     close_node(current_node, new_coordinate)
                     if current_path[-1].get_position() == (m - 1, n - 1):
                         Solution(current_path, current_cost)
-                    elif current_path[-1].possible_move != [0, 0, 0, 0] and Bounding(current_cost,current_path):
-                        if loop_check(new_node,current_path,current_cost):
-                            stack_path.append(current_path)
-                            stack_cost.append(current_cost)
-                            DFS()
+                    elif current_path[-1].possible_move != [0, 0, 0, 0] loop_check(new_node,current_path,current_cost):
+                        stack_path.append(current_path)
+                        stack_cost.append(current_cost)
+                        DFS()
                     current_path.pop()
                     current_cost += move_cost[2]
                     to_unclose_node = closed_nodes.pop()
@@ -226,11 +202,10 @@ def DFS():
                     close_node(current_node, new_coordinate)
                     if current_path[-1].get_position() == (m - 1, n - 1):
                         Solution(current_path, current_cost)
-                    elif current_path[-1].possible_move != [0, 0, 0, 0] and Bounding(current_cost,current_path):
-                        if loop_check(new_node,current_path,current_cost):
-                            stack_path.append(current_path)
-                            stack_cost.append(current_cost)
-                            DFS()
+                    elif current_path[-1].possible_move != [0, 0, 0, 0] and loop_check(new_node,current_path,current_cost):
+                        stack_path.append(current_path)
+                        stack_cost.append(current_cost)
+                        DFS()
                     current_path.pop()
                     current_cost -= move_cost[3]
                     to_unclose_node = closed_nodes.pop()
