@@ -76,7 +76,8 @@ all_points[(m-1, 0)].possible_move = [1, 0, 0, 1]
 all_points[(0, n-1)].possible_move = [0, 1, 1, 0]
 all_points[(m - 1, n - 1)].possible_move = [0, 0, 0, 0]
 initial_path = [all_points[(0,0)]]
-stack_cost = [0]
+initial_cost = [0]
+
 min_cost = 999999
 count = 0
 best_path = []
@@ -88,30 +89,30 @@ for s in initial_sequence:
             initial_path.append(all_points[new_coordinate])
             initial_path[-2].possible_move[0] = 0
             initial_path[-1].possible_move[1] = 0
-            stack_cost[0] /= move_cost[0]
+            initial_cost[0] /= move_cost[0]
     elif s == 's':
         new_coordinate = initial_path[-1].go_down()
         if new_coordinate is not False:
             initial_path.append(all_points[new_coordinate])
             initial_path[-2].possible_move[1] = 0
             initial_path[-1].possible_move[0] = 0
-            stack_cost[0] *= move_cost[1]
+            initial_cost[0] *= move_cost[1]
     elif s == 'w':
         new_coordinate = initial_path[-1].go_left()
         if new_coordinate is not False:
             initial_path.append(all_points[new_coordinate])
             initial_path[-2].possible_move[2] = 0
             initial_path[-1].possible_move[3] = 0
-            stack_cost[0] -= move_cost[2]
+            initial_cost[0] -= move_cost[2]
     elif s == 'e':
         new_coordinate = initial_path[-1].go_right()
         if new_coordinate is not False:
             initial_path.append(all_points[new_coordinate])
             initial_path[-2].possible_move[3] = 0
             initial_path[-1].possible_move[2] = 0
-            stack_cost[0] += move_cost[3]
+            initial_cost[0] += move_cost[3]
 stack_path = [initial_path]
-
+stack_cost = initial_cost[:]
 def Solution(current_path, current_cost):
     global min_cost, all_points, best_path, count, best_cost
     path=(x.get_position() for x in current_path[:])
@@ -148,7 +149,7 @@ def DFSstart(depth):
     all_points[(m - 1, n - 1)].possible_move = [0, 0, 0, 0]
     best_path = []
     stack_path = [initial_path]
-    stack_cost = [0]
+    stack_cost = initial_cost[:]
     DFS(depth)
 
 def DFS(depth):
