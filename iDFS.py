@@ -82,35 +82,7 @@ min_cost = 999999
 count = 0
 best_path = []
 best_cost={}
-for s in initial_sequence:
-    if s == 'n':
-        new_coordinate = initial_path[-1].go_up()
-        if new_coordinate is not False:
-            initial_path.append(all_points[new_coordinate])
-            initial_path[-2].possible_move[0] = 0
-            initial_path[-1].possible_move[1] = 0
-            initial_cost[0] /= move_cost[0]
-    elif s == 's':
-        new_coordinate = initial_path[-1].go_down()
-        if new_coordinate is not False:
-            initial_path.append(all_points[new_coordinate])
-            initial_path[-2].possible_move[1] = 0
-            initial_path[-1].possible_move[0] = 0
-            initial_cost[0] *= move_cost[1]
-    elif s == 'w':
-        new_coordinate = initial_path[-1].go_left()
-        if new_coordinate is not False:
-            initial_path.append(all_points[new_coordinate])
-            initial_path[-2].possible_move[2] = 0
-            initial_path[-1].possible_move[3] = 0
-            initial_cost[0] -= move_cost[2]
-    elif s == 'e':
-        new_coordinate = initial_path[-1].go_right()
-        if new_coordinate is not False:
-            initial_path.append(all_points[new_coordinate])
-            initial_path[-2].possible_move[3] = 0
-            initial_path[-1].possible_move[2] = 0
-            initial_cost[0] += move_cost[3]
+
 stack_path = [initial_path]
 stack_cost = initial_cost[:]
 def Solution(current_path, current_cost):
@@ -336,11 +308,47 @@ def close_node(current_considered_node, new_coordinate):
 def magellan_calc(current_node): #calculate the min. number of path to reach the goal
     i,j =current_node.coordinate
     return m-1-i+n-1-j
+def close_node_initial(current_considered_node, new_coordinate):
+    if current_considered_node == all_points[new_coordinate] or current_considered_node == all_points[(m - 1, n - 1)]:
+        return
+    if current_considered_node.possible_move.count(1)==1:
+        dir_to_remove = current_considered_node.possible_move.index(1)
+        new_node_coor = restrict(current_considered_node, dir_to_remove)
+        close_node(all_points[new_node_coor], new_coordinate)
 
+
+for s in initial_sequence:
+    if s == 'n':
+        new_coordinate = initial_path[-1].go_up()
+        if new_coordinate is not False:
+            initial_path.append(all_points[new_coordinate])
+            restrict(initial_path[-2],0)
+            stack_cost[0] /= move_cost[0]
+    elif s == 's':
+        new_coordinate = initial_path[-1].go_down()
+        if new_coordinate is not False:
+            initial_path.append(all_points[new_coordinate])
+            restrict(initial_path[-2],1)
+            stack_cost[0] *= move_cost[1]
+    elif s == 'w':
+        new_coordinate = initial_path[-1].go_left()
+        if new_coordinate is not False:
+            initial_path.append(all_points[new_coordinate])
+            restrict(initial_path[-2],2)
+            stack_cost[0] -= move_cost[2]
+    elif s == 'e':
+        new_coordinate = initial_path[-1].go_right()
+        if new_coordinate is not False:
+            initial_path.append(all_points[new_coordinate])
+            restrict(initial_path[-2],3)
+            stack_cost[0] += move_cost[3]
+for node in initial_path:
+    close_node_initial(node, initial_path[-1].coordinate)
+stack_path = [initial_path]
 
 
 t1 = perf_counter()
-i = magellan_calc(initial_path[-1])+1
+i = magellan_calc(initial_path[0])+1
 while True:
     old_best_cost = len(best_cost)
     DFSstart(i)
