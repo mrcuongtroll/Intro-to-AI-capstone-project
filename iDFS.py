@@ -1,6 +1,5 @@
 import math
 import random
-import collections
 from time import perf_counter
 random.seed(101)
 #m,n >2
@@ -299,7 +298,7 @@ def restrict(current_node, dir):  # Cant go through the same path, return next n
         all_points[new_coordinate].possible_move[2] = 0
         current_node.possible_move[3] = 0
     return new_coordinate
- 
+
  
 def unrestrict(current_node, dir):  # undo restrict
     if current_node != all_points[(m - 1, n - 1)]:
