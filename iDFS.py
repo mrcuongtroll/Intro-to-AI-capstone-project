@@ -4,14 +4,14 @@ import collections
 from time import perf_counter
 random.seed(101)
 #m,n >2
-m = int(input('M: '))
-n = int(input('N: '))
-# m,n,initial_sequence =5 ,5, ''.split()
-initial_sequence = input('Starting action_sequence (West: w, East: e, North: n, South: s): ').split()
+# m = int(input('M: '))
+# n = int(input('N: '))
+# m,n,initial_sequence =3 ,3, 'e e'.split()
+# initial_sequence = input('Starting action_sequence (West: w, East: e, North: n, South: s): ').split()
 
 # move_cost: North, South, West, East
-move_cost = [random.randint(2, 5), random.randint(2, 5), random.randint(2, 5), random.randint(2, 5)]
-
+# move_cost = [random.randint(2, 5), random.randint(2, 5), random.randint(2, 5), random.randint(2, 5)]
+# move_cost=[2,2,2,2]
 
 
 class Point:
@@ -83,13 +83,11 @@ count = 0
 best_path = []
 best_cost={}
 
-stack_path = [initial_path]
-stack_cost = initial_cost[:]
+
 def Solution(current_path, current_cost):
     global min_cost, all_points, best_path, count, best_cost
     path=(x.get_position() for x in current_path[:])
     if len(current_path) not in best_cost:
-        
         best_cost[len(current_path)]=(current_cost,path)
     else:
         if best_cost[len(current_path)][0]>current_cost:
@@ -106,20 +104,6 @@ def Solution(current_path, current_cost):
         print('\n')
 def DFSstart(depth):
     global stack_path, min_cost, move_cost, all_points, stack_cost, count, best_path
-    for i in range(m):
-        for j in range(n):
-            all_points[(i, j)] = Point((i, j))
-    for i in range(1,m):
-        all_points[(i, 0)].possible_move = [1, 1, 0, 1]
-        all_points[(i, n-1)].possible_move = [1, 1, 1, 0]
-    for j in range(1,n):
-        all_points[(0, j)].possible_move = [0, 1, 1, 1]
-        all_points[(m-1, j)].possible_move = [1, 0, 1, 1]
-    all_points[(0, 0)].possible_move = [0, 1, 0, 1]
-    all_points[(m-1, 0)].possible_move = [1, 0, 0, 1]
-    all_points[(0, n-1)].possible_move = [0, 1, 1, 0]
-    all_points[(m - 1, n - 1)].possible_move = [0, 0, 0, 0]
-    best_path = []
     stack_path = [initial_path]
     stack_cost = initial_cost[:]
     DFS(depth)
@@ -129,9 +113,7 @@ def DFS(depth):
     if len(stack_path) == 0:
         return
       
-    current_path = stack_path.pop()
-    if len(current_path) == depth:
-        return  
+    current_path = stack_path.pop()  
     current_cost = stack_cost.pop()
     current_node = current_path[-1]
     if magellan_calc(current_node) > depth - len(current_path):
@@ -316,35 +298,33 @@ def close_node_initial(current_considered_node, new_coordinate):
         new_node_coor = restrict(current_considered_node, dir_to_remove)
         close_node(all_points[new_node_coor], new_coordinate)
 
-
 for s in initial_sequence:
     if s == 'n':
         new_coordinate = initial_path[-1].go_up()
         if new_coordinate is not False:
             initial_path.append(all_points[new_coordinate])
             restrict(initial_path[-2],0)
-            stack_cost[0] /= move_cost[0]
+            initial_cost[0] /= move_cost[0]
     elif s == 's':
         new_coordinate = initial_path[-1].go_down()
         if new_coordinate is not False:
             initial_path.append(all_points[new_coordinate])
             restrict(initial_path[-2],1)
-            stack_cost[0] *= move_cost[1]
+            initial_cost[0] *= move_cost[1]
     elif s == 'w':
         new_coordinate = initial_path[-1].go_left()
         if new_coordinate is not False:
             initial_path.append(all_points[new_coordinate])
             restrict(initial_path[-2],2)
-            stack_cost[0] -= move_cost[2]
+            initial_cost[0] -= move_cost[2]
     elif s == 'e':
         new_coordinate = initial_path[-1].go_right()
         if new_coordinate is not False:
             initial_path.append(all_points[new_coordinate])
             restrict(initial_path[-2],3)
-            stack_cost[0] += move_cost[3]
+            initial_cost[0] += move_cost[3]
 for node in initial_path:
     close_node_initial(node, initial_path[-1].coordinate)
-stack_path = [initial_path]
 
 
 t1 = perf_counter()
