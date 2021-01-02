@@ -108,7 +108,7 @@ if __name__ == '__main__':
             next = (point[0] - 1, point[1])
             initial_path.append({point, next})
         point = next
-    thequeue.append(node(coordinates = point, tax = initial_tax, path = tuple(initial_path)))
+    thequeue.append(node(coordinates = point, tax = initial_tax, path = tuple(initial_path), action_sequence = tuple(initial_sequence)))
     best_tax = 10e9
     best_action_sequence = ()
     t0 = timeit.default_timer()
