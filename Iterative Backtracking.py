@@ -1,5 +1,5 @@
 import random
-
+random.seed(101)
 m = int(input('M: '))
 n = int(input('N: '))
 
@@ -157,7 +157,6 @@ def Solution(current_path, current_cost):
         print(best_path)
         print('Length of optimal path:', len(best_path))
         print('\n')
-        clear_output(wait=True)
         
 def loop_check(new_node,current_path,stack_cost):
     if new_node in current_path[:-1]:
