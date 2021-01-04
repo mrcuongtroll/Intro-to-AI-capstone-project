@@ -52,6 +52,7 @@ class Point:
 cost_dict = {}
 closed_nodes = []
 all_points = {}
+best_cost={}
 for i in range(m):
     for j in range(n):
         all_points[(i, j)] = Point((i, j))
