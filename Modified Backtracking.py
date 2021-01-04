@@ -1,5 +1,5 @@
 import random
-
+random.seed(101)
 m = int(input('M: '))
 n = int(input('N: '))
 
